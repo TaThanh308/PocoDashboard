@@ -10,6 +10,288 @@
 <title>Smart Dashboard</title>
 
 <style>
+
+/* =====================================
+   POCO X8 PRO - HYPEROS 3 OPTIMIZATION
+   SMART DASHBOARD V3
+===================================== */
+
+html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+
+    padding-top: max(env(safe-area-inset-top), 5px);
+    padding-left: max(env(safe-area-inset-left), 12px);
+    padding-right: max(env(safe-area-inset-right), 12px);
+    padding-bottom: max(env(safe-area-inset-bottom), 8px);
+}
+
+.app {
+    width: 100%;
+    max-width: 600px;
+    height: 100%;
+    min-height: 0;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* HEADER */
+.app header {
+    flex: 0 0 42px;
+    height: 42px;
+    min-height: 42px;
+    margin: 0;
+}
+
+/* VÙNG HIỂN THỊ */
+.pages {
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* TỪNG MÀN HÌNH */
+.page {
+    display: none;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 5px 0 10px;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.page::-webkit-scrollbar {
+    display: none;
+}
+
+.page.active {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+/* ĐỒNG HỒ */
+.clock {
+    flex-shrink: 0;
+    padding: 17px 12px;
+}
+
+.time {
+    font-size: clamp(48px, 14vw, 76px);
+    letter-spacing: -3px;
+    line-height: 1.05;
+}
+
+.date {
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.subtime {
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* THẺ THỜI TIẾT */
+.grid {
+    flex-shrink: 0;
+    gap: 9px;
+}
+
+.grid .card {
+    min-width: 0;
+    padding: 13px 11px;
+}
+
+.temp {
+    font-size: 30px;
+}
+
+.metric {
+    font-size: 19px;
+}
+
+/* LỐI TẮT */
+.page#home > .card {
+    flex-shrink: 0;
+}
+
+.quick {
+    gap: 7px;
+}
+
+.app-link {
+    padding: 9px 2px;
+    font-size: 11px;
+}
+
+.app-link span {
+    font-size: 22px;
+    margin-bottom: 4px;
+}
+
+/* FOOTER */
+.foot {
+    flex-shrink: 0;
+    padding: 4px 0;
+}
+
+/* THANH MENU - KHÔNG ĐÈ NỘI DUNG */
+.nav {
+    position: relative;
+    z-index: 20;
+
+    width: 100%;
+    flex: 0 0 56px;
+    height: 56px;
+    min-height: 56px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+
+    margin: 0;
+    padding: 4px 0;
+
+    border-top: 1px solid rgba(255,255,255,.12);
+    background: rgba(12,17,36,.94);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.nav button {
+    min-width: 0;
+    height: 48px;
+    padding: 3px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+
+    border-radius: 13px;
+    font-size: 10px;
+}
+
+.nav button span {
+    font-size: 19px;
+    line-height: 22px;
+}
+
+/* MÀN HÌNH THẤP */
+@media (max-height: 750px) {
+    .app header {
+        flex-basis: 36px;
+        height: 36px;
+        min-height: 36px;
+    }
+
+    .clock {
+        padding: 11px;
+    }
+
+    .time {
+        font-size: clamp(43px, 12vw, 62px);
+    }
+
+    .card {
+        padding: 12px;
+        border-radius: 18px;
+    }
+
+    .section-title {
+        margin-bottom: 7px;
+    }
+
+    .nav {
+        flex-basis: 52px;
+        height: 52px;
+        min-height: 52px;
+    }
+
+    .nav button {
+        height: 44px;
+    }
+}
+
+/* MÀN HÌNH RẤT THẤP */
+@media (max-height: 650px) and (orientation: portrait) {
+    .clock {
+        padding: 8px;
+    }
+
+    .time {
+        font-size: 43px;
+    }
+
+    .grid .card {
+        padding: 9px;
+    }
+
+    .page.active {
+        gap: 7px;
+    }
+}
+
+/* XOAY NGANG */
+@media (orientation: landscape) and (min-width: 520px) {
+    .app {
+        max-width: 1100px;
+    }
+
+    .page.active {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-content: start;
+        gap: 10px;
+    }
+
+    .page#home .clock {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .page#home .grid {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .page#home > .card:not(.clock) {
+        grid-column: 1 / -1;
+    }
+
+    .page#tasks > .card,
+    .page#settings > .card {
+        grid-column: 1 / -1;
+    }
+
+    .time {
+        font-size: 55px;
+    }
+}
+
 :root {
  --bg:#0b1020;
  --panel:rgba(255,255,255,.09);
