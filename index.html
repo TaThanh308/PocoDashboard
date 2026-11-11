@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10152b">
+<meta name="description" content="Bảng điều khiển đồng hồ, thời tiết và lịch trình cho điện thoại">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Smart Dashboard</title>
+<style>
+:root{--bg:#0b1020;--panel:rgba(255,255,255,.09);--line:rgba(255,255,255,.12);--muted:#aab4d0;--white:#f7f8ff;--cyan:#58d9ff;--violet:#9b8cff;--pink:#ff83bd;--green:#70e2b2}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--white);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 12% 0%,#253b70 0,transparent 38%),radial-gradient(ellipse at 100% 25%,#4c286c 0,transparent 35%),linear-gradient(155deg,#10182e,#090d1a 70%);padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+.wrap{max-width:720px;margin:auto;padding:20px 0 30px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.brand{font-weight:800;letter-spacing:.4px}.live{font-size:12px;color:var(--green);background:#70e2b21a;border:1px solid #70e2b244;padding:7px 11px;border-radius:99px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:20px;backdrop-filter:blur(18px);box-shadow:0 16px 40px #0003;margin-bottom:14px}
+.clock{text-align:center;padding:28px 16px 24px;position:relative;overflow:hidden}.clock:before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#5c8dff25;filter:blur(45px);left:calc(50% - 110px);top:-130px}.time{font-size:clamp(58px,16vw,92px);font-weight:750;letter-spacing:-5px;line-height:1.05;font-variant-numeric:tabular-nums;position:relative;text-shadow:0 5px 35px #7e9dff44}.date{font-size:16px;color:#d5dcf3;margin-top:12px}.subtime{font-size:12px;color:var(--muted);margin-top:7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.weather{display:flex;align-items:center;gap:12px}.weather .emoji{font-size:42px}.temp{font-size:36px;font-weight:750;letter-spacing:-2px}.muted{color:var(--muted);font-size:13px}.section-title{font-size:14px;font-weight:750;margin:0 0 13px;color:#e9edff}.metric{font-size:21px;font-weight:700;margin-top:5px}.metric small{font-size:12px;color:var(--muted);font-weight:500}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.app{border:1px solid var(--line);border-radius:18px;padding:13px 5px;text-align:center;background:#ffffff09;color:var(--white);text-decoration:none;font-size:12px}.app span{display:block;font-size:25px;margin-bottom:7px}.tasks{display:flex;gap:10px;align-items:center}.tasks input{width:18px;height:18px;accent-color:#8e8bff}.tasks input:checked+span{text-decoration:line-through;color:#8992ac}.taskrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid #ffffff12}.taskrow:last-child{border:0}.taskrow span{flex:1;font-size:14px}.taskrow button{background:none;border:0;color:#ff9cbb;font-size:18px}
+.controls{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#ffffff12;color:white;border-radius:14px;padding:11px 14px;font-weight:650}.btn.primary{background:linear-gradient(120deg,#5b8cff,#9b70ef);border:0}.foot{text-align:center;color:#7783a5;font-size:11px;padding:10px}
+
+@media (orientation: landscape) and (min-width: 520px) {
+  body { padding-left: max(22px, env(safe-area-inset-left)); padding-right: max(22px, env(safe-area-inset-right)); }
+  .wrap { max-width: 1100px; padding-top: 12px; }
+  .top { margin-bottom: 10px; }
+  .clock { padding: 14px 18px; }
+  .time { font-size: clamp(48px, 9vw, 72px); letter-spacing: -3px; }
+  .date { margin-top: 5px; font-size: 14px; }
+  .subtime { margin-top: 3px; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .card { margin-bottom: 10px; padding: 15px 18px; }
+  .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 10px 14px; align-items: start; }
+  .top { grid-column: 1 / -1; }
+  .clock { grid-column: 1; grid-row: 2; }
+  .grid { grid-column: 1; grid-row: 3; }
+  .wrap > .card:nth-of-type(3) { grid-column: 2; grid-row: 2; }
+  .wrap > .card:nth-of-type(4) { grid-column: 2; grid-row: 3; }
+  .wrap > .card:nth-of-type(5) { grid-column: 1 / -1; grid-row: 4; }
+  .foot { grid-column: 1 / -1; }
+}
+@media(max-width:390px){.card{padding:16px;border-radius:20px}.quick{gap:7px}.app{font-size:11px}.grid{gap:9px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="brand">✦ SMART DASHBOARD</div><div class="live">● LIVE</div></header>
+  <section class="card clock">
+    <div class="time" id="clock">--:--</div>
+    <div class="date" id="date">Đang tải ngày tháng…</div>
+    <div class="subtime" id="greeting">Chúc bạn một ngày tốt lành</div>
+  </section>
+  <section class="grid">
+    <div class="card">
+      <h2 class="section-title">Thời tiết hiện tại</h2>
+      <div class="weather"><div class="emoji" id="weatherIcon">🌤️</div><div><div class="temp" id="temp">--°</div><div class="muted" id="condition">Đang lấy dữ liệu…</div></div></div>
+      <div class="muted" id="place" style="margin-top:12px">Vị trí của bạn</div>
+    </div>
+    <div class="card">
+      <h2 class="section-title">Thông tin nhanh</h2>
+      <div class="muted">Cảm giác như</div><div class="metric" id="feels">--°</div>
+      <div class="muted" style="margin-top:10px">Độ ẩm</div><div class="metric" id="humidity">--%</div>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="section-title">Lối tắt ứng dụng</h2>
+    <div class="quick">
+      <a class="app" href="https://calendar.google.com"><span>🗓️</span>Lịch</a>
+      <a class="app" href="https://mail.google.com"><span>✉️</span>Email</a>
+      <a class="app" href="https://www.google.com/maps"><span>📍</span>Bản đồ</a>
+      <a class="app" href="https://www.youtube.com"><span>▶️</span>YouTube</a>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="section-title">Việc cần làm hôm nay</h2>
+    <div id="taskList">
+      <div class="taskrow"><input type="checkbox"><span>Kiểm tra lịch trình hôm nay</span></div>
+      <div class="taskrow"><input type="checkbox"><span>Uống đủ nước</span></div>
+    </div>
+    <div class="controls" style="margin-top:12px"><button class="btn" id="addTask">＋ Thêm việc</button></div>
+  </section>
+  <section class="card">
+    <h2 class="section-title">Chế độ hiển thị</h2>
+    <div class="muted" style="margin-bottom:12px">Giữ màn hình sáng khi mở bảng điều khiển. Tính năng này phụ thuộc trình duyệt và có thể bị HyperOS giới hạn.</div>
+    <div class="controls">
+      <button class="btn primary" id="wake">☀ Giữ màn hình sáng</button>
+      <button class="btn" id="fullscreen">⛶ Toàn màn hình</button>
+      <button class="btn" id="refresh">↻ Cập nhật thời tiết</button>
+    </div>
+    <div class="muted" id="status" style="margin-top:12px">Mẹo: bật Tự động xoay trên điện thoại rồi xoay ngang máy; giao diện sẽ tự sắp xếp lại. Thêm ứng dụng vào Màn hình chính để mở nhanh.</div>
+  </section>
+  <div class="foot">SMART DASHBOARD · PWA · Dữ liệu thời tiết từ Open-Meteo</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function tick(){
+ const now=new Date();
+ $('clock').textContent=now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+ $('date').textContent=now.toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+ const h=now.getHours(); $('greeting').textContent=h<11?'Chào buổi sáng ☀️':h<18?'Chúc bạn buổi chiều vui vẻ 🌤️':'Chúc bạn buổi tối thư giãn 🌙';
+}
+tick();setInterval(tick,1000);
+const weatherCodes={0:['Trời quang','☀️'],1:['Ít mây','🌤️'],2:['Có mây','⛅'],3:['Nhiều mây','☁️'],45:['Sương mù','🌫️'],48:['Sương muối','🌫️'],51:['Mưa phùn nhẹ','🌦️'],53:['Mưa phùn','🌦️'],55:['Mưa phùn dày','🌧️'],61:['Mưa nhẹ','🌧️'],63:['Mưa vừa','🌧️'],65:['Mưa to','🌧️'],71:['Tuyết nhẹ','🌨️'],80:['Mưa rào','🌦️'],81:['Mưa rào vừa','🌧️'],82:['Mưa rào lớn','⛈️'],95:['Dông','⛈️']};
+async function loadWeather(lat=21.18,lon=106.07,label='Bắc Ninh (ước tính)'){
+ $('condition').textContent='Đang cập nhật…';
+ try{
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code&timezone=auto`;
+  const r=await fetch(url);if(!r.ok)throw Error('Không lấy được dữ liệu');const d=await r.json();const c=d.current;const [desc,ico]=weatherCodes[c.weather_code]||['Thời tiết thay đổi','🌤️'];
+  $('temp').textContent=Math.round(c.temperature_2m)+'°';$('feels').textContent=Math.round(c.apparent_temperature)+'°';$('humidity').textContent=c.relative_humidity_2m+'%';$('condition').textContent=desc;$('weatherIcon').textContent=ico;$('place').textContent=label+' · cập nhật '+new Date(c.time).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+ }catch(e){$('condition').textContent='Chưa tải được thời tiết';$('place').textContent='Kiểm tra kết nối Internet rồi thử lại';}
+}
+function refreshWeather(){
+ if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>loadWeather(p.coords.latitude,p.coords.longitude,'Vị trí hiện tại'),()=>loadWeather(),{timeout:8000,maximumAge:600000});}else loadWeather();
+}
+refreshWeather();$('refresh').onclick=refreshWeather;setInterval(refreshWeather,30*60*1000);
+let wakeLock=null;
+$('wake').onclick=async()=>{
+ try{if(!('wakeLock'in navigator)){ $('status').textContent='Trình duyệt này chưa hỗ trợ Screen Wake Lock. Hãy thử Chrome mới nhất.';return;}
+ if(wakeLock){await wakeLock.release();wakeLock=null;$('wake').textContent='☀ Giữ màn hình sáng';$('status').textContent='Đã tắt chế độ giữ màn hình sáng.';}
+ else{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;$('wake').textContent='☀ Giữ màn hình sáng';});$('wake').textContent='✓ Đang giữ màn hình sáng';$('status').textContent='Giữ màn hình sáng đang bật khi trang ở foreground.';}
+ }catch(e){$('status').textContent='Không bật được: hãy mở trang bằng HTTPS và kiểm tra quyền trình duyệt.';}
+};
+document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&$('wake').textContent.startsWith('✓')){try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}});
+$('fullscreen').onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){$('status').textContent='Trình duyệt không cho phép toàn màn hình ở chế độ này.'}};
+$('addTask').onclick=()=>{const t=prompt('Nhập việc cần làm:');if(!t)return;const row=document.createElement('div');row.className='taskrow';const cb=document.createElement('input');cb.type='checkbox';const s=document.createElement('span');s.textContent=t;const del=document.createElement('button');del.textContent='×';del.onclick=()=>row.remove();row.append(cb,s,del);$('taskList').append(row)};
+if('serviceWorker'in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>

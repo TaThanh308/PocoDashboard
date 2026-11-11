@@ -1,0 +1,10 @@
+{
+  "name":"Smart Dashboard",
+  "short_name":"Dashboard",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#0b1020",
+  "theme_color":"#10152b",
+  "description":"Đồng hồ, thời tiết và việc cần làm",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
